@@ -59,4 +59,3 @@ instance/
 # Project specific:
 flask-salescraper/
 _reference_/
-config.py
