@@ -51,24 +51,58 @@
     <div class="container">
       <!-- Example row of columns -->
       <div class="row">
+      	<h2 class="text-center">How does SaleScraper work?</h2>
+      </div>
+
+      <div class="row">
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h4>Heading</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h4>Heading</h4>
           <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
           <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div>
         <div class="col-md-4">
-          <h2>Heading</h2>
+          <h4>Heading</h4>
           <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus.</p>
           <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
         </div>
       </div>
 
-      <hr>
+    </div> <!-- /container -->
+
+    <div class="container">
+    	<div class="row">
+    		<h2>Getting Started</h2>
+    		<p>Give it a try! Enter your 10-digit phone number, select a retailer from the list, and paste in the URL of a product you'd like to track
+    	</div>
+    	<form action="" method="post">
+    		{{ form.hidden_tag() }}
+    		<div class="row">
+    			<div class="col">
+    				{{ form.phone_number.label }}
+    				{{ form.phone_number() }}
+    			</div>
+    			<div class="col">
+    				{{ form.vendor.label }}
+    				{{ form.vendor()}}
+    			</div>
+    			<div class="col-5">
+    				{{ form.url.label }}
+    				{{ form.url(size="50") }}
+    			</div>
+    			<div class="col">
+    				</br>{{ form.submit() }}
+    			</div>
+    		</div>
+    	</form>
+
+
+
+    	<hr>
 
     </div> <!-- /container -->
 
