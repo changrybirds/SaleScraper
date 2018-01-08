@@ -1,10 +1,13 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, SelectField, SubmitField
-from wtforms.validators import InputRequired, Length, URL
+from wtforms.validators import InputRequired, URL, Regexp
+import re
 
 class TrackingForm(FlaskForm):
-	phone_number = IntegerField('10-digit phone number', validators=[
-		InputRequired(), Length(10, 15)])
+	phone_regex = re.compile('^(\+\d{1,2}\s)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}$')
+
+	phone_number = StringField('10-digit phone number', validators=[
+		InputRequired(), Regexp(phone_regex, 0, 'Please enter a 10-digit US phone number')])
 
 	vendor_list = [
 		('br', 'Banana Republic'), ('jc', 'J.Crew'), ('ex', 'Express'), ('ns','Nordstrom')]
@@ -15,3 +18,4 @@ class TrackingForm(FlaskForm):
 		InputRequired(), URL(True, 'Please enter a valid URL')])
 
 	submit = SubmitField('Submit')
+
