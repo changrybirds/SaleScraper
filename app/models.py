@@ -10,4 +10,5 @@ class Tracker(db.Model):
 	timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
 
 	def __repr__(self):
-		return '<Tracker # {}>'.format(self.id)
+		output = format(self.id) + format(self.phone_number) + format(self.vendor) + format(self.url) + format(self.timestamp)
+		return output
