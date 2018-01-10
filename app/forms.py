@@ -10,7 +10,7 @@ class TrackingForm(FlaskForm):
 		InputRequired(), Regexp(phone_regex, 0, 'Please enter a 10-digit US phone number')])
 
 	vendor_list = [
-		('Banana Republic', 'Banana Republic'), ('J.Crew', 'J.Crew'), ('Express', 'Express'), ('Nordstrom','Nordstrom')]
+		('Banana Republic', 'Banana Republic'), ('Express', 'Express'), ('J.Crew', 'J.Crew'), ('Nordstrom','Nordstrom')]
 
 	vendor = SelectField('Retailer', choices=vendor_list, validators=[InputRequired()])
 
