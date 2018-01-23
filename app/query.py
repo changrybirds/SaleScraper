@@ -1,6 +1,11 @@
 from app import app, db, scraper
 from app.models import Tracker
 from datetime import datetime
+from twilio.rest import Client
+
+account_sid = "placeholder"
+auth_token = "placeholder"
+client = Client(account_sid, auth_token)
 
 def dbQuery():
 	trackers = Tracker.query.all()
@@ -15,3 +20,10 @@ def dbQuery():
 				db.session.commit()
 			else:
 				print(False) # insert correct text
+
+
+def notify(phone, vendor):
+	client.api.account.messages.create(
+		to=phone, 
+		from_="twilio number here", 
+		body="Your item from " + vendor + " is on sale!")
