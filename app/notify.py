@@ -2,14 +2,16 @@ from twilio.rest import Client
 import requests
 import json, urllib
 
-account_sid = "placeholder"
-auth_token = "placeholder"
+# Twilio credentials
+account_sid = "Twilio placeholder"
+auth_token = "Twilio placeholder"
 client = Client(account_sid, auth_token)
 
+# Google URL shortener credentials
+g_shorten_key = 'Google URL Shortener API key'
 
 def g_shorten_url(url):
-  key = 'Google URL Shortener API key'
-  post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=' + key
+  post_url = 'https://www.googleapis.com/urlshortener/v1/url?key=' + g_shorten_key
   payload = {'longUrl': url}
   headers = {'content-type': 'application/json'}
 
