@@ -1,6 +1,6 @@
 from twilio.rest import Client
 import requests
-import json, urllib
+import json
 
 # Twilio credentials
 account_sid = "Twilio placeholder"
@@ -17,7 +17,8 @@ def g_shorten_url(url):
 
   r = requests.post(post_url, data=json.dumps(payload), headers=headers)
   resp = json.loads(r.text)
-  print(resp)
+  
+  # print(resp)
   return resp['id']
 
 
