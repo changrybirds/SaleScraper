@@ -1,7 +1,7 @@
-'''Dev notes 2018-01-14:
-- XPath currently returning empty lists for Express and J.Crew
-- Suspect it could be due to certain elements being generated w/ JavaScript
-- Should test out alternative solutions like Selenium or PhantomJS instead of lxml'''
+'''Dev notes 2018-02-10:
+- Hypothesis: any site that has 'js' as part of its HTML header won't work properly, since content is rendered via JavaScript, which lxml won't pick up
+
+'''
 
 # Imports needed for parsing
 from lxml import etree, html
@@ -59,6 +59,16 @@ def __nsPath(tree):
     return False
 
 
+def __uqPath(tree):
+  no_markdown_path = tree.xpath('//*[@id="product-content"]/div/div[5]/span[3][@class="price-sales sale-price-only"]')
+
+  print(no_markdown_path)
+
+  if no_markdown_path:
+    return False
+  else:
+    return True
+
 
 def scrape_sale_status(vendor, url):
   # get page content and convert to tree format
@@ -70,6 +80,7 @@ def scrape_sale_status(vendor, url):
           'Express' : __exPath,
           'J.Crew' : __jcPath,
           'Nordstrom' : __nsPath,
+          'Uniqlo' : __uqPath
           }
 
   return vendor_paths[vendor](tree)
@@ -77,15 +88,22 @@ def scrape_sale_status(vendor, url):
 
 
 def __main():
-  print(scrape_sale_status('Banana Republic', 'http://bananarepublic.gap.com/browse/product.do?cid=26220&pcid=26219&vid=2&pid=797686002'))
-
+  
+  print(scrape_sale_status('Banana Republic', 'http://bananarepublic.gap.com/browse/product.do?cid=47431&pcid=10894&vid=1&pid=176742382'))
+  
+  '''
   # Express XPath method currently buggy
   print(scrape_sale_status('Express', 'https://www.express.com/clothing/men/camo-hooded-puffer-coat/pro/04314214C/color/GREEN'))
 
   # JCrew XPath method currently buggy
   print(scrape_sale_status('J.Crew', 'https://www.jcrew.com/p/mens_category/dressshirts/ludlowdress/ludlow-slimfit-shirt-in-thin-stripe/G7455?sale=true&color_name=cambridge-harvest&isFromSale=true'))
+  '''
+  print(scrape_sale_status('Nordstrom', 'https://shop.nordstrom.com/s/nordstrom-mens-shop-smartcare-trim-fit-dress-shirt/3286612?breadcrumb=Home%2FSale%2FMen%2FClothing'))
+  
 
-  print(scrape_sale_status('Nordstrom', 'https://shop.nordstrom.com/s/bonobos-slim-fit-stretch-washed-chinos/4877966?breadcrumb=Home%2FSale%2FMen%2FClothing'))
+  print(scrape_sale_status('Uniqlo', 'https://www.uniqlo.com/us/en/men-ultra-light-down-jacket-400504.html'))
+
+  print(scrape_sale_status('Uniqlo', 'https://www.uniqlo.com/us/en/men-blocktech-parka-404362.html'))
 
 
 
