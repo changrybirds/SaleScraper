@@ -10,8 +10,6 @@ from selenium import webdriver
 import requests
 
 
-
-
 def __brPath(tree):
   # create single-element list from markdown-specific class attribute
   # check to see if list is populated
@@ -86,10 +84,18 @@ def scrape_sale_status(browser, vendor, url):
   return vendor_paths[vendor](tree)
 
 
+def start_browser():
+  return webdriver.Chrome()
+
+def shutdown_browser(browser):
+  browser.quit()
+
 
 # test code
 def main():
-  browser = webdriver.Chrome()
+  browser = start_browser()
+
+  # uncomment lines to run individual tests
 
   # print(scrape_sale_status(browser, 'Banana Republic', 'http://bananarepublic.gap.com/browse/product.do?cid=47431&pcid=10894&vid=1&pid=176742382'))
   
@@ -103,10 +109,9 @@ def main():
 
   # print(scrape_sale_status(browser, 'Uniqlo', 'https://www.uniqlo.com/us/en/men-blocktech-parka-404362.html'))
 
-  browser.quit()
+  shutdown_browser(browser)
 
   pass
-
 
 
 if __name__ == '__main__':
