@@ -57,5 +57,6 @@ instance/
 .webassets-cache 
 
 # Project specific:
+# (ignore virtualenv folder)
 flask-salescraper/
 _reference_/

@@ -1,17 +1,21 @@
-'''Dev notes 2018-02-10:
-- Hypothesis: any site that has 'js' as part of its HTML header won't work properly, since content is rendered via JavaScript, which lxml won't pick up
-
+'''Dev notes 2018-02-24:
+- selenium implementation is working!
+- updated and tested all retailers
+- changed uniqlo to bias towards false negatives
 '''
 
 # Imports needed for parsing
 from lxml import etree, html
+from selenium import webdriver
 import requests
+
+
 
 
 def __brPath(tree):
   # create single-element list from markdown-specific class attribute
   # check to see if list is populated
-  markdown_path = tree.xpath('//*[@id="product"]/div[2]/div[1]/div[1]/div[2]/h5[1][@class="product-price--markdown "]')
+  markdown_path = tree.xpath('//*[@id="product"]/div[2]/div[1]/div[1]/div[2]/h5/span[@class="product-price--highlight"]')
 
   if markdown_path:
     return True
@@ -21,13 +25,12 @@ def __brPath(tree):
 
 def __exPath(tree):
   # create single-element list from markdown-specific class attribute
-  # check to see if list is populated
-  markdown_path = tree.xpath('//p[2][@class="bodyPrimary price__message"]')
+  # check to see if list element contains markdown text
+  markdown_path = tree.xpath('//*[@id="content"]/div/div/section/section[1]/section/div[2]/div/div/text()')
 
-  # debugging
-  print(markdown_path)
+  markdown_string = "marked down from"
 
-  if markdown_path:
+  if markdown_string in markdown_path[0]:
     return True
   else:
     return False
@@ -37,9 +40,6 @@ def __jcPath(tree):
   # create single-element list from markdown-specific class attribute
   # check to see if list is populated
   markdown_path = tree.xpath('//*[@class="product__price--sale discount-percentage"]/text()')
-
-  # debugging
-  print(markdown_path)
 
   if markdown_path:
     return True
@@ -60,52 +60,54 @@ def __nsPath(tree):
 
 
 def __uqPath(tree):
-  no_markdown_path = tree.xpath('//*[@id="product-content"]/div/div[5]/span[3][@class="price-sales sale-price-only"]')
+  markdown_path = tree.xpath('//*[@id="product-content"]/div/div[5]/span[2][@class="price-standard pdp-space-price"]')
 
-  print(no_markdown_path)
-
-  if no_markdown_path:
-    return False
-  else:
+  if markdown_path:
     return True
+  else:
+    return False
 
 
-def scrape_sale_status(vendor, url):
-  # get page content and convert to tree format
-  page = requests.get(url)
-  tree = html.fromstring(page.content)
+def scrape_sale_status(browser, vendor, url):
+  # navigate to url and grab page content via selenium
+  browser.get(url)
+  html_source = browser.page_source
+
+  tree = html.fromstring(html_source)
   tree = etree.ElementTree(tree)
 
   vendor_paths = {'Banana Republic' : __brPath,
-          'Express' : __exPath,
-          'J.Crew' : __jcPath,
-          'Nordstrom' : __nsPath,
-          'Uniqlo' : __uqPath
-          }
+                  'Express' : __exPath,
+                  'J.Crew' : __jcPath,
+                  'Nordstrom' : __nsPath,
+                  'Uniqlo' : __uqPath
+                  }
 
   return vendor_paths[vendor](tree)
 
 
 
-def __main():
-  
-  print(scrape_sale_status('Banana Republic', 'http://bananarepublic.gap.com/browse/product.do?cid=47431&pcid=10894&vid=1&pid=176742382'))
-  
-  '''
-  # Express XPath method currently buggy
-  print(scrape_sale_status('Express', 'https://www.express.com/clothing/men/camo-hooded-puffer-coat/pro/04314214C/color/GREEN'))
+# test code
+def main():
+  browser = webdriver.Chrome()
 
-  # JCrew XPath method currently buggy
-  print(scrape_sale_status('J.Crew', 'https://www.jcrew.com/p/mens_category/dressshirts/ludlowdress/ludlow-slimfit-shirt-in-thin-stripe/G7455?sale=true&color_name=cambridge-harvest&isFromSale=true'))
-  '''
-  print(scrape_sale_status('Nordstrom', 'https://shop.nordstrom.com/s/nordstrom-mens-shop-smartcare-trim-fit-dress-shirt/3286612?breadcrumb=Home%2FSale%2FMen%2FClothing'))
+  # print(scrape_sale_status(browser, 'Banana Republic', 'http://bananarepublic.gap.com/browse/product.do?cid=47431&pcid=10894&vid=1&pid=176742382'))
   
+  # print(scrape_sale_status(browser, 'Express', 'https://www.express.com/clothing/men/detailed-crew-neck-sweater/pro/01775033/color/YELLOW'))
 
-  print(scrape_sale_status('Uniqlo', 'https://www.uniqlo.com/us/en/men-ultra-light-down-jacket-400504.html'))
+  # print(scrape_sale_status(browser, 'J.Crew', 'https://www.jcrew.com/p/mens_category/shirts/classicfitshirts/slim-brushed-flannel-shirt-in-tattersall/G8286?color_name=metal-abyss'))
+  
+  # print(scrape_sale_status(browser, 'Nordstrom', 'https://shop.nordstrom.com/s/nordstrom-mens-shop-smartcare-trim-fit-dress-shirt/3286612?breadcrumb=Home%2FSale%2FMen%2FClothing'))
 
-  print(scrape_sale_status('Uniqlo', 'https://www.uniqlo.com/us/en/men-blocktech-parka-404362.html'))
+  # print(scrape_sale_status(browser, 'Uniqlo', 'https://www.uniqlo.com/us/en/men-ultra-light-down-jacket-400504.html'))
+
+  # print(scrape_sale_status(browser, 'Uniqlo', 'https://www.uniqlo.com/us/en/men-blocktech-parka-404362.html'))
+
+  browser.quit()
+
+  pass
 
 
 
 if __name__ == '__main__':
-  __main()
+  main()
