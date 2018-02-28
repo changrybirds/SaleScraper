@@ -1,7 +1,6 @@
 '''Dev notes 2018-02-24:
 - selenium implementation is working!
-- updated and tested all retailers
-- changed uniqlo to bias towards false negatives
+- refactored webdriver initialization to avoid initializing and quitting w/ every query
 '''
 
 # Imports needed for parsing

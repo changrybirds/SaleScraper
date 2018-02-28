@@ -2,7 +2,8 @@ from app import db
 from datetime import datetime
 
 class Tracker(db.Model):
-  
+  __tablename__ = 'trackers'
+
   id = db.Column(db.Integer, primary_key=True)
   phone_number = db.Column(db.String(24), index=True)
   vendor = db.Column(db.String(64), index=True)
